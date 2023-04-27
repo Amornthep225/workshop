@@ -12,8 +12,12 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import { object, string } from "yup";
 import { signIn } from "@/services/serverService";
+import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
+  const navigate = useNavigate()
+
+
   interface loginForm {
     username: string;
     password: string;
@@ -37,7 +41,10 @@ const SignIn = () => {
   ) => {
     formikHelper.resetForm();
     signIn(values)
-      .then((res) => console.log(res))
+     .then((response) => {
+      const {success} = response
+      if(success) navigate('/dashboard' , {replace: true })
+    })
       .catch((err) => console.log(err))
   };
 
