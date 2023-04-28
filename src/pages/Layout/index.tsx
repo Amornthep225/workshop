@@ -2,21 +2,29 @@ import { Box, Toolbar, useMediaQuery } from '@mui/material'
 import { useState } from 'react'
 import Header from '@/components/Header'
 import Sidebar from '@/components/Sidebar'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import Footer from '@/components/Footer'
-
+import RequireAuth from '../requireAuth'
+import { useAppDispatch } from '@/store/store'
+import { signOut } from '@/store/slices/authSlice'
+ 
 const drawerWidth: number = 240
 
 const Layout = () => {
   const isNonMobile = useMediaQuery('(min-width: 600px')
   const [open, setOpen] = useState(isNonMobile ? true : false)
 
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
   const toggleDrawer = () => {
     setOpen(!open)
   }
 
   const SignOut = () => {
-    console.log('Sign Out')
+    dispatch(signOut()).then((_) => {
+      navigate('/signin', { replace: true })
+    })
   }
 
   return (
@@ -46,7 +54,7 @@ const Layout = () => {
           }}
         >
           <Toolbar />
-          <Outlet />
+          <RequireAuth />
         </Box>
         <Footer />
       </div>
