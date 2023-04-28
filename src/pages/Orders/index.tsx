@@ -6,20 +6,24 @@ import {
   Typography,
   Container,
 } from '@mui/material'
-import Img from '../../../public/0620-28.webp'
+
+import Img from '@../../../public/0620-28.webp'
 import { formatCurrency } from '@/utils/formatCurrency'
 import { useEffect, useState } from 'react'
-import { ProductData } from '@/models/product.model'
 import { fecthProducts } from '@/services/serverService'
+import { imageUrl } from '@/utils/common'
+import { useAppDispatch } from '@/store/store'
+import { useSelector } from 'react-redux'
+import { productSelector, setProducts } from '@/store/slices/productSlice'
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 const Orders = () => {
-  const [products, setProducts] = useState<ProductData[]>([])
+  const dispatch = useAppDispatch()
+  const products = useSelector(productSelector)
 
   useEffect(() => {
     fecthProducts()
-      .then((response) => console.log(response))
+      .then((response) => dispatch(setProducts(response.data)))
       .catch((err) => console.log(err))
   }, [])
 
@@ -27,13 +31,13 @@ const Orders = () => {
     <Container sx={{ py: 8 }} maxWidth='md'>
       {/* End hero unit */}
       <Grid container spacing={2}>
-        {cards.map((card) => (
-          <Grid item key={card} xs={12} sm={6} md={3}>
+        {products && products.map((product) => (
+          <Grid item key={product.product_id} xs={12} sm={6} md={3}>
             <Card className='h-full flex flex-col'>
               <CardMedia
                 className='p-2'
                 component='img'
-                image={Img}
+                image={imageUrl(product.image)}
                 alt='random'
               />
               <CardContent
@@ -41,9 +45,9 @@ const Orders = () => {
                 sx={{ flexGrow: 1 }}
               >
                 <Typography className='!text-md truncate'>
-                  Heading Heading Heading Heading Heading Heading
+                  {product.name}
                 </Typography>
-                <Typography>{formatCurrency(100)}</Typography>
+                <Typography>{product.price}</Typography>
               </CardContent>
             </Card>
           </Grid>

@@ -40,7 +40,7 @@ const Layout = () => {
         toggleDrawer={toggleDrawer}
         SignOut={SignOut}
       />
-      <div className='flex flex-col'>
+      <div className='flex flex-col w-full'>
         <Box
           component='main'
           sx={{
